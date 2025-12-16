@@ -181,8 +181,13 @@
             <form id="fcrForm">
                 <div class="grid">
                     <div class="input-group">
-                        <label for="chickens">Number of Chickens</label>
+                        <label for="chickens">Initial Number of Chickens</label>
                         <input type="number" id="chickens" required min="1" step="1">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="finalChickens">Final Number of Chickens</label>
+                        <input type="number" id="finalChickens" required min="1" step="1">
                     </div>
 
                     <div class="input-group">
@@ -225,6 +230,14 @@
                     <span class="result-value" id="fcr"></span>
                 </div>
                 <div class="result-item">
+                    <span class="result-label">Average Weight per Chicken:</span>
+                    <span class="result-value" id="avgWeight"></span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Death Percentage:</span>
+                    <span class="result-value" id="deathPercent"></span>
+                </div>
+                <div class="result-item">
                     <span class="result-label">1 KG PRODUCTION COST:</span>
                     <span class="result-value" id="finalCost"></span>
                 </div>
@@ -236,7 +249,8 @@
         document.getElementById('fcrForm').addEventListener('submit', function(e) {
             e.preventDefault();
 
-            const chickens = parseFloat(document.getElementById('chickens').value);
+            const initialChickens = parseFloat(document.getElementById('chickens').value);
+            const finalChickens = parseFloat(document.getElementById('finalChickens').value);
             const totalWeight = parseFloat(document.getElementById('totalWeight').value);
             const feedBags = parseFloat(document.getElementById('feedBags').value);
             const bagWeight = parseFloat(document.getElementById('bagWeight').value);
@@ -244,14 +258,27 @@
             const chickPrice = parseFloat(document.getElementById('chickPrice').value);
             const medicineCost = parseFloat(document.getElementById('medicineCost').value);
 
+            // Calculate deaths
+            const totalDeaths = initialChickens - finalChickens;
+            const deathPercentage = (totalDeaths / initialChickens) * 100;
+
+            // Calculate average weight per chicken (using final chicken count)
+            const avgWeightPerChicken = totalWeight / finalChickens;
+
+            // Calculate FCR
             const totalFeedUsed = feedBags * bagWeight;
             const fcr = totalFeedUsed / totalWeight;
+
+            // Calculate costs per kg
             const feedCostPerKg = fcr * feedPrice;
-            const productionCostPerKg = (chickens * chickPrice) / totalWeight;
+            const productionCostPerKg = (initialChickens * chickPrice) / totalWeight; // Uses initial count
             const medicalCostPerKg = medicineCost / totalWeight;
             const finalCostPerKg = feedCostPerKg + productionCostPerKg + medicalCostPerKg;
 
+            // Display results
             document.getElementById('fcr').textContent = fcr.toFixed(3);
+            document.getElementById('avgWeight').textContent = avgWeightPerChicken.toFixed(2) + ' kg';
+            document.getElementById('deathPercent').textContent = deathPercentage.toFixed(2) + '% (' + totalDeaths + ' deaths)';
             document.getElementById('finalCost').textContent = '₹' + finalCostPerKg.toFixed(2);
 
             document.getElementById('results').classList.add('show');

@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chicken FCR Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .results {
+            margin-top: 30px;
+            padding: 25px;
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            border-radius: 15px;
+            display: none;
+        }
+
+        .results.show {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .result-item:last-child {
+            border-bottom: none;
+            font-size: 24px;
+            font-weight: bold;
+            color: #d63031;
+            padding-top: 20px;
+            margin-top: 15px;
+            border-top: 2px solid rgba(255,255,255,0.5);
+        }
+
+        .result-label {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .result-value {
+            font-weight: 700;
+            color: #764ba2;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 600px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🐔 Chicken FCR Calculator</h1>
+            <p>Calculate Feed Conversion Ratio & Production Cost per Kg</p>
+        </div>
+
+        <div class="content">
+            <form id="fcrForm">
+                <div class="grid">
+                    <div class="input-group">
+                        <label for="chickens">Number of Chickens</label>
+                        <input type="number" id="chickens" required min="1" step="1">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="totalWeight">Total Weight Obtained (kg)</label>
+                        <input type="number" id="totalWeight" required min="0" step="0.01">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="feedBags">Number of Feed Bags Used</label>
+                        <input type="number" id="feedBags" required min="0" step="0.01">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="bagWeight">Weight per Feed Bag (kg)</label>
+                        <input type="number" id="bagWeight" value="50" required min="0" step="0.01">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="feedPrice">Feed Price (₹ per kg)</label>
+                        <input type="number" id="feedPrice" value="42" required min="0" step="0.01">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="chickPrice">Chick Price (₹ per chick)</label>
+                        <input type="number" id="chickPrice" value="33.3" required min="0" step="0.01">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="medicineCost">Total Medicine Cost (₹)</label>
+                        <input type="number" id="medicineCost" required min="0" step="0.01">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn">Calculate Production Cost</button>
+            </form>
+
+            <div class="results" id="results">
+                <div class="result-item">
+                    <span class="result-label">FCR (Feed Conversion Ratio):</span>
+                    <span class="result-value" id="fcr"></span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">1 KG PRODUCTION COST:</span>
+                    <span class="result-value" id="finalCost"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('fcrForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const chickens = parseFloat(document.getElementById('chickens').value);
+            const totalWeight = parseFloat(document.getElementById('totalWeight').value);
+            const feedBags = parseFloat(document.getElementById('feedBags').value);
+            const bagWeight = parseFloat(document.getElementById('bagWeight').value);
+            const feedPrice = parseFloat(document.getElementById('feedPrice').value);
+            const chickPrice = parseFloat(document.getElementById('chickPrice').value);
+            const medicineCost = parseFloat(document.getElementById('medicineCost').value);
+
+            const totalFeedUsed = feedBags * bagWeight;
+            const fcr = totalFeedUsed / totalWeight;
+            const feedCostPerKg = fcr * feedPrice;
+            const productionCostPerKg = (chickens * chickPrice) / totalWeight;
+            const medicalCostPerKg = medicineCost / totalWeight;
+            const finalCostPerKg = feedCostPerKg + productionCostPerKg + medicalCostPerKg;
+
+            document.getElementById('fcr').textContent = fcr.toFixed(3);
+            document.getElementById('finalCost').textContent = '₹' + finalCostPerKg.toFixed(2);
+
+            document.getElementById('results').classList.add('show');
+        });
+    </script>
+</body>
+</html>
